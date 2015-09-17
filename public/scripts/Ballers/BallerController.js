@@ -1,69 +1,78 @@
 app.controller('BallerController', function($scope, $http){
 
-  String.prototype.capitalizeFirstLetter = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
-  }
+  String.prototype.capitalizeFirstLetter = function() { return this.charAt(0).toUpperCase() + this.slice(1); }
 
-  //Search and SearchText are separate functions in angular
-  //We elected not to write a custom function and use these two over different players.
+  //First NBA player
   $scope.searchText = {};
   $scope.searchText.name = '';
-  //This is used for the second basketball player.
+
+  //Second NBA player.
   $scope.search = {};
   $scope.search.name = '';
 
-  $scope.callDB = function(name1, name2) {
+  $scope.callDB = function() {
+
+/*==================================|
+| This is the shortest path query   |
+|==================================*/
+
     var query = 'MATCH (p1:Player { name:"' +
       $scope.searchText.name.toLowerCase() + '" })' + ',(p2:Player{ name:"' +
       $scope.search.name.toLowerCase() + '" }),' +
-' p = shortestPath((p1)-[*]-(p2)) RETURN EXTRACT(n in nodes(p) | n.name), EXTRACT(n in nodes(p) | n.year), RELATIONSHIPS(p)';
+      ' p = shortestPath((p1)-[*]-(p2)) RETURN EXTRACT(n in nodes(p) | n.name), EXTRACT(n in nodes(p) | n.year), RELATIONSHIPS(p)';
+
+/*==================================|
+| This calls the server which goes  |
+| to the DB and returns our query   |
+|==================================*/
 
    $http({
      method:"POST",
-     url: "http://localhost:7474/db/data/cypher",
-     /*Use this url for local hosting*/
-     // method:"post",
-     // url:  'https://app39991019:c1R9PJMtTrQzXW2F4bnq@app39991019.sb05.stations.graphenedb.com:24789/db/data/cypher',
+     url: '/player',
      accepts: "application/json",
      datatype:"json",
-     data:{ "query" : query },
-     success: function(){},
-     error:function(jqxhr, textstatus, errorthrown){}
-   })//end of placelist ajax
+     data: { "query" : query },
+     error:function(jqxhr, textstatus, errorthrown){console.log("error",query,errorthrown)}
+   }).then(function(response) {
+     console.log(response.data.data);
 
-.success(function(data) {
+/*==================================|
+| This clears data and preps data   |
+| for output.                       |
+|==================================*/
 
-  $scope.dataset = '';
-  var players = [];
-  var teams = [];
-  var years = [];
+     $scope.dataset = '';
+      var answer = response.data.data[0][0];
+      var years = response.data.data[0][1];
+      for (var i = 0; i < answer.length; i++){
+        if (i % 2 === 0) { answer[i] = answer[i].split(" ").map(function(a){return a.capitalizeFirstLetter(); }).join(" ") }
+        else if (i === 1) { answer[i] = ' played in ' + answer[i] + " (" + years[i] + ") with "; }
+        else { answer[i] = ' who played in ' + answer[i] + " (" + years[i] + ") with "; }
+     }
+     $scope.dataset = answer.join('');
+    });
 
-  for( var i = 0; i < data.data[0][0].length; i++){
-   if(i%2 === 0){
-     players.push(data.data[0][0][i]);
-   } else{
-     teams.push(data.data[0][0][i]);
-   }
- }
+/*==================================|
+| This is a brand new picture       |
+|  feature using wikipedia.         |
+|==================================*/
 
- for(var i =0 ; i < data.data[0][1].length; i++){
-   if(data.data[0][1][i] !== null){
-     years.push(data.data[0][1][i]);
-   }
- }
+      var ballerName = $scope.searchText.name.split(/[ ]+/).map(function(el){ return el.capitalizeFirstLetter()}).join('%20');
+      var ballerWiki = "https://en.wikipedia.org/w/api.php?action=mobileview&format=json&page=" + ballerName + "&redirect=no&sections=0&prop=text&sectionprop=toclevel%7Clevel%7Cline%7Cnumber%7Cindex%7Cfromtitle%7Canchor&callback=?"
 
- var str = '';
-
- for( var i = 0; i < teams.length; i++){
-   str += players[i].split(" ").map(function(a){return a.capitalizeFirstLetter(); }).join(' ') + ((i === 0) ? "" : " who") +
-   ' played in ' + teams[i] + ' in ' + years[i] +' with ';
-   if(i === teams.length- 1){
-     str += players[i+1].split(" ").map(function(a){return a.capitalizeFirstLetter(); }).join(' ');
-   }
- }
-
- $scope.dataset = str;
-
-})
-};
+      // $http({
+      //   method:"POST",
+      //   url: '/picture',
+      //   accepts: "application/json",
+      //   datatype:"json",
+      //   data: {"data": ballerWiki},
+      //   error:function(data, status) { console.log(data || "Request failed"); }
+      // }).then(function(json) {
+      //   $get({method: 'JSON', url: json.data}).
+      //     var wikitext = json.mobileview.sections[0].text;
+      //     $('#picBaller').hide().append(wikitext);
+      //     var img = $('#picBaller').find('.infobox img:first').attr('src');
+      //     $('#picBaller').show().html('<img style="height: 150px;  border-radius:75px" src="' + img + '"/>');
+      //   })
+  };
 });
