@@ -15,6 +15,7 @@ var express = require('express'),
 /*=======================================================|
 |   Sets port to environment port or local port          |
 |=======================================================*/
+<<<<<<< HEAD
 
 var port = process.env.PORT || 7473;
 
@@ -30,6 +31,23 @@ var port = process.env.PORT || 7473;
 //   res.header("access-control-allow-headers", "Origin, X-Requested-With, Content-Type, Accept");
 //   next();
 // });
+=======
+
+var port = process.env.PORT || 7473;
+
+/*=======================================================|
+|   connecting the client and server                     |
+|   allows for CORS (cross origin resource sharing)      |
+|=======================================================*/
+
+app.use('player', function(req, res, next) {
+  // console.log("req",req);
+  // console.log("res",res);
+  res.header("access-control-allow-origin", "*");
+  res.header("access-control-allow-headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+>>>>>>> 07a41d79e407c4662b348df09ca8ec6ef3ad8f8c
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
