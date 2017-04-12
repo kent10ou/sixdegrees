@@ -15,6 +15,7 @@ var express = require('express'),
 /*=======================================================|
 |   Sets port to environment port or local port          |
 |=======================================================*/
+<<<<<<< e5e1e0ed2a7f2f141b421599ace487e249deb2c9
 
 var port = process.env.PORT || 7473;
 

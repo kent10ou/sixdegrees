@@ -23,18 +23,11 @@
 
 ## Usage
 
-<<<<<<< HEAD
 1. Brew install neo4j
 2. Install or update to java 1.7 or later.
 2. Type npm install in your console or terminal to install the dependencies
 3. Type neo4j start in a new tab in your terminal to start the neo4j server
 4. Type node server.js to start server and open browser to localhost:7473
-=======
-1. Type npm install in your console or terminal to install the dependencies
-2. Follow this guide to install neo4j [click here](https://github.com/upstanding-biome/sixdegrees/blob/master/how%20to%20use%20neo4j)
-3. Type neo4j start in a new tab in your terminal to start the neo4j server
-4. Open your browser to localhost://5000
->>>>>>> editted usage in readme
 5. Type two players names and press Enter.
 
 ## Dependencies
