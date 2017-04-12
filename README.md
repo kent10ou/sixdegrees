@@ -1,13 +1,9 @@
 # Six Dribbles
 > This app allows a user to type in any two basketball players and will create a graphic visualization of their relationship.
 
-<<<<<<< HEAD
-> Visit the site at [sixdribbles.com](http://sixdribbles.com)
-=======
 ![Alt text](https://github.com/dafabulousteach/sixdribbles/blob/master/screenShot.png)
 
 > Visit the site at [http://six-dribbles.herokuapp.com/#/](http://six-dribbles.herokuapp.com/#/)
->>>>>>> 07a41d79e407c4662b348df09ca8ec6ef3ad8f8c
 
 ## Team
 
